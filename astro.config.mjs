@@ -3,6 +3,6 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://drewericsson.github.io',
+  site: 'https://www.writecraft.co.uk',
   integrations: [sitemap()],
 });
