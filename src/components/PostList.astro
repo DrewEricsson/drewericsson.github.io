@@ -1,0 +1,205 @@
+---
+import { formatDate, formatProg, postUrl, readingTime, wordCount, type NumberedPost } from '../lib/posts';
+
+interface Props {
+  posts: NumberedPost[];
+  groupByYear?: boolean;
+}
+
+const { posts, groupByYear = false } = Astro.props;
+
+const groups: { year?: number; entries: NumberedPost[] }[] = [];
+if (groupByYear) {
+  for (const entry of posts) {
+    const year = entry.post.data.date.getUTCFullYear();
+    const group = groups.find((g) => g.year === year);
+    if (group) group.entries.push(entry);
+    else groups.push({ year, entries: [entry] });
+  }
+} else {
+  groups.push({ entries: posts });
+}
+---
+
+{
+  groups.map(({ year, entries }) => (
+    <div class="post-list">
+      {year && <h2 class="post-list__year">{year}</h2>}
+      <ol class="post-list__items" role="list">
+        {entries.map(({ post, prog }) => (
+          <li class="post-list__item">
+            <p class="post-list__date meta-text">
+              <time datetime={post.data.date.toISOString().slice(0, 10)}>{formatDate(post.data.date)}</time>
+              <span class="post-list__prog">{formatProg(prog)}</span>
+            </p>
+            <div class="post-list__body">
+              <h3 class="post-list__title">
+                <a href={postUrl(post)}>{post.data.title}</a>
+              </h3>
+              <p class="post-list__summary">{post.data.summary}</p>
+              <p class="post-list__details">
+                <span class="meta-text">{readingTime(wordCount(post.body))} min read</span>
+                {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  ))
+}
+
+<style>
+  .post-list + .post-list {
+    margin-top: var(--space-xl);
+  }
+
+  .post-list__year {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--weight-body);
+    letter-spacing: var(--tracking-meta);
+    color: var(--color-accent);
+  }
+
+  .post-list__year::after {
+    content: '';
+    flex: 1;
+    height: var(--rule-width);
+    background: var(--color-rule);
+  }
+
+  .post-list__items {
+    padding: 0;
+    list-style: none;
+  }
+
+  .post-list__item {
+    position: relative;
+    display: grid;
+    gap: var(--space-2xs);
+    margin-inline: calc(-1 * var(--space-s));
+    padding: var(--space-m) var(--space-s);
+    border-radius: var(--radius);
+    transition:
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .post-list__item + .post-list__item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline: var(--space-s);
+    height: var(--rule-width);
+    background: var(--color-rule);
+    transition: opacity 0.15s ease;
+  }
+
+  .post-list__item::before {
+    content: '';
+    position: absolute;
+    inset-block: var(--space-m);
+    left: 0;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .post-list__item:hover,
+  .post-list__item:focus-within {
+    background: var(--color-surface);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .post-list__item:hover::before,
+  .post-list__item:focus-within::before {
+    opacity: 1;
+  }
+
+  .post-list__item:hover::after,
+  .post-list__item:hover + .post-list__item::after,
+  .post-list__item:focus-within::after,
+  .post-list__item:focus-within + .post-list__item::after {
+    opacity: 0;
+  }
+
+  .post-list__date {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-xs);
+  }
+
+  .post-list__prog {
+    color: var(--color-accent);
+  }
+
+  .post-list__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .post-list__title {
+    font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.4375rem);
+  }
+
+  .post-list__title a {
+    text-decoration-color: transparent;
+  }
+
+  .post-list__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+  }
+
+  .post-list__item:hover .post-list__title a {
+    color: var(--color-link-hover);
+  }
+
+  .post-list__title a:focus-visible {
+    outline: none;
+  }
+
+  .post-list__title a:focus-visible::after {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .post-list__summary {
+    color: var(--color-text-muted);
+  }
+
+  .post-list__details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-top: var(--space-2xs);
+  }
+
+  .post-list__details .meta-text {
+    margin-right: var(--space-2xs);
+  }
+
+  @media (min-width: 40em) {
+    .post-list__item {
+      grid-template-columns: 8.5rem 1fr;
+      column-gap: var(--space-m);
+      align-items: baseline;
+    }
+
+    .post-list__date {
+      flex-direction: column;
+      padding-top: 0.35em;
+    }
+  }
+</style>

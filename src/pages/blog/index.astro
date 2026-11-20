@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PostList from '../../components/PostList.astro';
+import { getNumberedPosts, tagUrl } from '../../lib/posts';
+
+const posts = await getNumberedPosts();
+const tags = [...new Set(posts.flatMap(({ post }) => post.data.tags))].sort((a, b) => a.localeCompare(b, 'en-GB'));
+---
+
+<BaseLayout
+  title="Andy’s blog"
+  description="Andy’s blog: scribblings on what Andrew Williamson is writing, reading, and watching."
+>
+  <PageHeader title="Andy’s blog" lede="Scribblings on what I’m writing, reading, and watching.">
+    {
+      tags.length > 0 && (
+        <ul class="tag-list" aria-label="Tags">
+          {tags.map((tag) => (
+            <li>
+              <a class="tag" href={tagUrl(tag)}>{tag}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </PageHeader>
+  <div class="reading-column">
+    {posts.length > 0 ? <PostList posts={posts} groupByYear /> : <p>Nothing published yet. Check back soon.</p>}
+  </div>
+</BaseLayout>

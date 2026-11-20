@@ -1,0 +1,15 @@
+---
+import { withBase } from '../lib/url';
+
+interface Props {
+  href: string;
+  variant?: 'outline' | 'text';
+  class?: string;
+}
+
+const { href, variant = 'outline', class: className } = Astro.props;
+---
+
+<!-- Kept on one line on purpose: a line break inside the link would render as
+     an underlined space before or after the text. -->
+<a href={href.startsWith('/') ? withBase(href) : href} class:list={['button', { 'button--text': variant === 'text' }, className]}><slot /></a>

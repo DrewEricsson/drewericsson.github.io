@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+const FORMSPREE_FORM_ID = 'your-form-id';
+const formAction = `https://formspree.io/f/${FORMSPREE_FORM_ID}`;
+const email = 'drewericsson@gmail.com';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with Andrew Williamson about copyediting, proofreading, or writing."
+>
+  <PageHeader title="Contact" />
+  <div class="reading-column contact">
+    <p>
+      Send a few details about your project and Andrew will reply as soon as he can. You can also email <a href={`mailto:${email}`}>{email}</a>.
+    </p>
+
+    <form class="contact__form" action={formAction} method="post">
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" autocomplete="name" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+
+      <div class="field">
+        <label for="type">Type of work</label>
+        <select id="type" name="type">
+          <option>Copyediting</option>
+          <option>Proofreading</option>
+          <option>Writing or ghostwriting</option>
+          <option>Something else</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="7" required></textarea>
+      </div>
+
+      <div class="contact__honeypot" aria-hidden="true">
+        <label for="gotcha">Leave this field empty</label>
+        <input id="gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <button type="submit" class="button contact__submit">Send message</button>
+    </form>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    margin-top: var(--space-l);
+    padding: var(--space-l);
+    background: var(--color-surface);
+    border-radius: var(--radius);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  label {
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.6em 0.75em;
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: var(--rule-width) solid var(--color-field-border);
+    border-radius: 2px;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    border-color: var(--color-focus);
+    outline-offset: 0;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .contact__honeypot {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .contact__submit {
+    align-self: flex-start;
+    margin-top: var(--space-2xs);
+  }
+</style>

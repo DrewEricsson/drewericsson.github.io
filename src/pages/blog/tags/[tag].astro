@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import PostList from '../../../components/PostList.astro';
+import { getNumberedPosts, tagSlug, type NumberedPost } from '../../../lib/posts';
+
+export const getStaticPaths = (async () => {
+  const all = await getNumberedPosts();
+  const tags = new Set(all.flatMap(({ post }) => post.data.tags));
+  return [...tags].map((tag) => ({
+    params: { tag: tagSlug(tag) },
+    props: {
+      tag,
+      posts: all.filter(({ post }) => post.data.tags.includes(tag)),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  tag: string;
+  posts: NumberedPost[];
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`Tagged: ${tag}`} description={`Posts tagged “${tag}” on Andy’s blog.`}>
+  <PageHeader title={`Tagged: ${tag}`} label="← Andy’s blog" labelHref="/blog/" />
+  <div class="reading-column">
+    <PostList posts={posts} groupByYear />
+  </div>
+</BaseLayout>

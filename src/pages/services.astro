@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+const services = [
+  {
+    name: 'Copyediting',
+    text: 'Copyediting is a thorough edit for clarity, consistency, grammar, and style. It covers spelling, punctuation, usage, and continuity, and it flags anything that needs the author’s decision. It is best done once the writing is otherwise finished.',
+  },
+  {
+    name: 'Proofreading',
+    text: 'Proofreading is the final check of typeset pages or a finished manuscript, before it is published or sent out. It looks for the errors that remain: typos, wrong spellings, punctuation slips, and layout problems. It does not involve rewriting.',
+  },
+  {
+    name: 'Writing and ghostwriting',
+    text: 'Short stories, feature articles, book reviews, and other commissioned writing. With ghostwriting, Andrew writes the piece and you are credited as the author. The brief, length, and deadline are agreed at the start.',
+  },
+];
+---
+
+<!-- Andrew to check service descriptions. -->
+<BaseLayout
+  title="Services"
+  description="Copyediting, proofreading, and writing services from Andrew Williamson."
+>
+  <PageHeader title="Services" />
+  <div class="reading-column services">
+    <div class="services__list">
+      {
+        services.map(({ name, text }, index) => (
+          <section class="services__item">
+            <span class="services__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h2>{name}</h2>
+              <p>{text}</p>
+            </div>
+          </section>
+        ))
+      }
+    </div>
+
+    <div class="services__closing">
+      <p class="services__quote">Every project is different, so get in touch for a quote.</p>
+      <p>Andrew is an Intermediate Member of the Chartered Institute of Editing and Proofreading (CIEP).</p>
+      <p class="services__action"><Button href="/contact/">Contact Andrew</Button></p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .services__item {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-l);
+    border-bottom: var(--rule-width) solid var(--color-rule);
+  }
+
+  .services__item:first-child {
+    padding-top: 0;
+  }
+
+  .services__number {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    letter-spacing: var(--tracking-meta);
+    color: var(--color-accent);
+  }
+
+  .services__item h2 {
+    margin-bottom: var(--space-xs);
+  }
+
+  @media (min-width: 40em) {
+    .services__item {
+      grid-template-columns: 3rem 1fr;
+      align-items: baseline;
+    }
+  }
+
+  .services__closing {
+    margin-top: var(--space-xl);
+    padding: var(--space-l);
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    border-top: 3px solid var(--color-accent);
+  }
+
+  .services__quote {
+    font-weight: var(--weight-heading);
+  }
+
+  .services__closing > p + p {
+    margin-top: var(--space-2xs);
+  }
+
+  .services__closing > .services__action {
+    margin-top: var(--space-m);
+  }
+</style>

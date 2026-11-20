@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import Button from '../components/Button.astro';
+import CredentialsList from '../components/CredentialsList.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import portrait from '../assets/portrait.webp';
+import { getNumberedPosts } from '../lib/posts';
+
+const latest = (await getNumberedPosts()).slice(0, 4);
+---
+
+<BaseLayout
+  description="Andrew Williamson: writer, copyeditor and proofreader in Staffordshire."
+>
+  <section class="hero band halftone" aria-labelledby="intro-heading">
+    <div class="container hero__inner">
+      <Image
+        class="hero__portrait"
+        src={portrait}
+        alt="Comic-style portrait of Andrew Williamson"
+        widths={[200, 400]}
+        sizes="(min-width: 46em) 200px, 136px"
+        loading="eager"
+      />
+      <div class="hero__text">
+        <h1 id="intro-heading">Andrew Williamson</h1>
+        <p class="hero__line">Writer and editor</p>
+        <p class="hero__links">
+          <Button href="/services/">Editing services</Button>
+          <Button href="/blog/" variant="text">Read the blog</Button>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container home">
+    <section class="home__section" aria-labelledby="credentials-heading">
+      <SectionHeading id="credentials-heading">Credentials</SectionHeading>
+      <CredentialsList />
+    </section>
+
+    <section class="home__section" aria-labelledby="latest-heading">
+      <SectionHeading id="latest-heading">From the blog</SectionHeading>
+      {latest.length > 0 ? <PostList posts={latest} /> : <p>Nothing published yet. Check back soon.</p>}
+      <p class="home__all">
+        <Button href="/blog/" variant="text">All posts</Button>
+      </p>
+    </section>
+
+    <p class="invitation ruled-paper">
+      Need a copyeditor or proofreader? <Button href="/contact/" variant="text">Get in touch</Button>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-top: var(--rule-width) solid var(--color-band-rule);
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .hero__portrait {
+    width: 136px;
+    height: 136px;
+    border-radius: 50%;
+    outline: 2px solid var(--color-band-accent);
+    outline-offset: 5px;
+    margin: 7px;
+  }
+
+  .hero__line {
+    margin-top: var(--space-2xs);
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    font-style: italic;
+    color: var(--color-band-muted);
+  }
+
+  .hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s) var(--space-l);
+    margin-top: var(--space-l);
+  }
+
+  .hero__links :global(.button:not(.button--text)) {
+    background: var(--color-band-accent);
+    color: var(--color-band-accent-text);
+  }
+
+  @media (min-width: 46em) {
+    .hero {
+      padding-block: var(--space-2xl) var(--space-3xl);
+    }
+
+    .hero__inner {
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: var(--space-2xl);
+    }
+
+    .hero__portrait {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  .home__section {
+    margin-top: var(--space-2xl);
+  }
+
+  .home__section > h2 {
+    margin-bottom: var(--space-s);
+  }
+
+  .home__all {
+    margin-top: var(--space-m);
+  }
+
+  .invitation {
+    margin-top: var(--space-2xl);
+    padding: var(--ruled-line-gap) var(--space-m);
+    line-height: var(--ruled-line-gap);
+    --ruled-margin: var(--space-m);
+    border-radius: var(--radius);
+    border-top: 3px solid var(--color-accent);
+    font-size: 1.125em;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .invitation :global(.button) {
+    font-style: normal;
+    white-space: nowrap;
+  }
+</style>

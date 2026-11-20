@@ -1,0 +1,76 @@
+---
+import { withBase } from '../lib/url';
+
+interface Props {
+  title: string;
+  label?: string;
+  labelHref?: string;
+  lede?: string;
+  width?: 'reading' | 'page';
+}
+
+const { title, label, labelHref, lede, width = 'reading' } = Astro.props;
+---
+
+<header class={`page-header ruled-paper page-header--${width}`}>
+  <div class={width === 'page' ? 'container' : 'reading-column'}>
+    {
+      label && (
+        <div class="page-header__label meta-text">
+          {labelHref ? <a href={withBase(labelHref)}>{label}</a> : <p>{label}</p>}
+        </div>
+      )
+    }
+    <h1>{title}</h1>
+    {lede && <p class="page-header__lede lede">{lede}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .page-header {
+    --line: var(--ruled-line-gap);
+    padding-block: calc(var(--line) * 2) var(--line);
+    margin-bottom: var(--space-xl);
+    border-bottom: var(--rule-width) solid var(--color-rule);
+  }
+
+  .page-header h1 {
+    margin: 0;
+    line-height: calc(var(--line) * 2);
+  }
+
+  .page-header--reading {
+    --ruled-margin: max(0.75rem, calc(50% - var(--width-prose) / 2 - 1.25rem));
+  }
+
+  .page-header--page {
+    --ruled-margin: max(0.75rem, calc(50% - var(--width-page) / 2 - 1.25rem));
+  }
+
+  .page-header__label {
+    margin: 0;
+    line-height: var(--line);
+  }
+
+  .page-header__label a {
+    color: inherit;
+  }
+
+  .page-header__lede {
+    margin: 0;
+    max-width: 34em;
+    line-height: var(--line);
+  }
+
+  .page-header :global(.tag-list) {
+    margin-top: var(--line);
+    row-gap: 0;
+  }
+
+  .page-header :global(.tag-list > li) {
+    display: flex;
+    align-items: center;
+    height: var(--line);
+  }
+</style>

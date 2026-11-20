@@ -1,0 +1,29 @@
+---
+import { withBase } from '../lib/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<BaseLayout title="Page not found" description="This page could not be found.">
+  <PageHeader title="Page not found" label="Error 404" />
+  <div class="reading-column not-found">
+    <p class="not-found__line">The chances of finding this page were a million to one, they said.</p>
+    <p><a href={withBase('/')}>Back to the home page</a> or <a href={withBase('/blog/')}>read the blog</a>.</p>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .not-found__line {
+    margin-bottom: var(--space-xs);
+    padding-left: var(--space-m);
+    border-left: 3px solid var(--color-accent);
+    font-size: 1.125em;
+    font-style: italic;
+  }
+</style>

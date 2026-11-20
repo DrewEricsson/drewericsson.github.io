@@ -1,0 +1,164 @@
+---
+import { answerWords, clueOfTheWeek } from '../lib/crossword';
+
+const clue = clueOfTheWeek();
+const words = answerWords(clue);
+const answerLabel = `Answer: ${words.join(' ').toLowerCase()}`;
+---
+
+<div class="clue">
+  <p class="clue__number">{clue.number} Across</p>
+  <p class="clue__text">
+    {clue.clue} <span class="clue__enumeration">{clue.enumeration}</span>
+  </p>
+
+  <details class="clue__reveal">
+    <summary class="clue__summary">
+      <span class="clue__grid clue__grid--blank" aria-hidden="true">
+        {
+          words.map((word, wordIndex) => (
+            <span class="clue__word">
+              {[...word].map((_, index) => (
+                <span class="clue__cell">
+                  {wordIndex === 0 && index === 0 && <span class="clue__cell-number">{clue.number}</span>}
+                </span>
+              ))}
+            </span>
+          ))
+        }
+      </span>
+      <span class="clue__grid clue__grid--answer" role="img" aria-label={answerLabel}>
+        {
+          words.map((word, wordIndex) => (
+            <span class="clue__word" aria-hidden="true">
+              {[...word].map((letter, index) => (
+                <span class="clue__cell">
+                  {wordIndex === 0 && index === 0 && <span class="clue__cell-number">{clue.number}</span>}
+                  {letter}
+                </span>
+              ))}
+            </span>
+          ))
+        }
+      </span>
+      <span class="clue__toggle">
+        <span class="clue__toggle-closed">Reveal answer</span>
+        <span class="clue__toggle-open">Hide answer</span>
+      </span>
+    </summary>
+    <p class="clue__source">Source: {clue.source}</p>
+  </details>
+</div>
+
+<style>
+  .clue {
+    padding: var(--space-m);
+    border: var(--rule-width) solid var(--color-band-rule);
+    border-radius: var(--radius);
+  }
+
+  .clue__number {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--color-band-accent);
+  }
+
+  .clue__text {
+    margin-top: var(--space-3xs);
+    font-size: 1.0625rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--color-band-text);
+  }
+
+  .clue__enumeration {
+    font-style: normal;
+    white-space: nowrap;
+  }
+
+  .clue__reveal {
+    margin-top: var(--space-s);
+  }
+
+  .clue__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-m);
+    width: fit-content;
+    max-width: 100%;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .clue__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .clue__reveal[open] .clue__grid--blank,
+  .clue__reveal:not([open]) .clue__grid--answer,
+  .clue__reveal[open] .clue__toggle-closed,
+  .clue__reveal:not([open]) .clue__toggle-open {
+    display: none;
+  }
+
+  .clue__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .clue__word {
+    display: flex;
+    gap: 2px;
+  }
+
+  .clue__cell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding-top: 0.15rem;
+    background: var(--color-band-text);
+    border-radius: 1px;
+    font-size: 1.0625rem;
+    font-weight: var(--weight-heading);
+    line-height: 1;
+    color: var(--color-band-bg);
+  }
+
+  .clue__cell-number {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    font-weight: var(--weight-body);
+  }
+
+  .clue__toggle {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-meta);
+    color: var(--color-band-muted);
+    text-decoration: underline;
+    text-decoration-color: var(--color-band-rule);
+    text-underline-offset: 0.3em;
+  }
+
+  .clue__summary:hover .clue__toggle {
+    color: var(--color-band-accent);
+    text-decoration-color: var(--color-band-accent);
+  }
+
+  .clue__source {
+    margin-top: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-meta);
+    color: var(--color-band-muted);
+  }
+</style>

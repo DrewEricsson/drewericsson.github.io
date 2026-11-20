@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CredentialsList from '../components/CredentialsList.astro';
+import PageHeader from '../components/PageHeader.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import portrait from '../assets/portrait.webp';
+
+const training = [
+  'Copyediting 1: Introduction (CIEP)',
+  'Proofreading 1: Introduction (CIEP)',
+  'Developmental Editing: Fiction Theory, tutored (Liminal Pages)',
+  'Script Editing and Script Development (Philip Shelley, Grand Scheme Media)',
+  'Adaptation Workshop and Writing for Radio (Paul Bassett-Davies, Euroscript)',
+  'Breaking into Script Reading (Lucy V Hay), London Screenwriters’ Festival',
+  'Writing TV (Pilar Alessandra), London Screenwriters’ Festival',
+];
+---
+
+<BaseLayout
+  title="About"
+  description="About Andrew Williamson: a writer, copyeditor and proofreader based in Staffordshire."
+>
+  <PageHeader title="About" width="page" />
+  <div class="container about">
+    <div class="about__intro">
+      <Image
+        class="about__portrait"
+        src={portrait}
+        alt="Comic-style portrait of Andrew Williamson"
+        widths={[280, 560]}
+        sizes="(min-width: 46em) 280px, 200px"
+      />
+      <div class="about__bio">
+        <!-- Placeholder until Andrew sends his own write-up. -->
+        <p>TBC</p>
+        <p>Here is my <a href="https://www.linkedin.com/in/andrew-williamson-writer/" rel="me">LinkedIn</a>.</p>
+      </div>
+    </div>
+
+    <section class="about__section">
+      <SectionHeading>Credentials</SectionHeading>
+      <CredentialsList />
+    </section>
+
+    <section class="about__section">
+      <SectionHeading>Training</SectionHeading>
+      <ul class="dash-list">{training.map((item) => <li>{item}</li>)}</ul>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .about__intro {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  .about__portrait {
+    width: 200px;
+    padding: var(--space-2xs);
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .about__bio {
+    max-width: var(--width-prose);
+  }
+
+  .about__bio > * + * {
+    margin-top: 1.25em;
+  }
+
+  @media (min-width: 46em) {
+    .about__intro {
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-2xl);
+    }
+
+    .about__portrait {
+      width: 280px;
+    }
+  }
+
+  .about__section {
+    margin-top: var(--space-2xl);
+  }
+
+  .about__section ul {
+    max-width: var(--width-prose);
+    margin-top: var(--space-s);
+  }
+
+  .about__section li + li {
+    margin-top: 0.4em;
+  }
+</style>

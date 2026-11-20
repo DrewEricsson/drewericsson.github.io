@@ -1,0 +1,161 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import { formatProg, getNumberedPosts, postUrl, tagUrl, wordCount, type NumberedPost } from '../../lib/posts';
+
+export const getStaticPaths = (async () => {
+  const numbered = await getNumberedPosts();
+  return numbered.map((entry, index) => ({
+    params: { slug: entry.post.id },
+    props: {
+      entry,
+      newer: numbered[index - 1],
+      older: numbered[index + 1],
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: NumberedPost;
+  newer?: NumberedPost;
+  older?: NumberedPost;
+}
+
+const { entry, newer, older } = Astro.props;
+const { post, prog } = entry;
+const { title, summary, date, tags, cover, coverAlt } = post.data;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={title} description={summary} image={cover} type="article">
+  <meta slot="head" property="article:published_time" content={date.toISOString()} />
+
+  <article class="post reading-column page">
+    <header class="post__header">
+      <p class="meta-text post__prog">{formatProg(prog)}</p>
+      <h1 class="post__title">{title}</h1>
+      <PostMeta date={date} words={wordCount(post.body)} />
+      {
+        tags.length > 0 && (
+          <ul class="tag-list" aria-label="Tags">
+            {tags.map((tag) => (
+              <li>
+                <a class="tag" href={tagUrl(tag)}>{tag}</a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    {
+      cover && (
+        <Image
+          class="post__cover"
+          src={cover}
+          alt={coverAlt ?? ''}
+          widths={[680, 1360]}
+          sizes="(min-width: 728px) 680px, 100vw"
+          loading="eager"
+        />
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      (older || newer) && (
+        <nav class="post__pagination" aria-label="More posts">
+          {older && (
+            <a class="post__pagination-link post__pagination-link--older" href={postUrl(older.post)}>
+              <span class="meta-text">← Previous prog</span>
+              <span class="post__pagination-title">{older.post.data.title}</span>
+            </a>
+          )}
+          {newer && (
+            <a class="post__pagination-link post__pagination-link--newer" href={postUrl(newer.post)}>
+              <span class="meta-text">Next prog →</span>
+              <span class="post__pagination-title">{newer.post.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .post__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-l);
+    border-bottom: var(--rule-width) solid var(--color-rule);
+  }
+
+  .post__prog {
+    color: var(--color-accent);
+  }
+
+  .post__title {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .post__cover {
+    width: 100%;
+    margin-bottom: var(--space-xl);
+    border-radius: var(--radius);
+  }
+
+  .post__pagination {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-2xl);
+    padding-block: var(--space-s);
+    border-block: var(--rule-width) solid var(--color-rule);
+  }
+
+  @media (min-width: 36em) {
+    .post__pagination {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .post__pagination-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    margin-inline: calc(-1 * var(--space-s));
+    padding: var(--space-s);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .post__pagination-link:hover {
+    background: var(--color-surface);
+  }
+
+  .post__pagination-link--newer {
+    grid-column: -2;
+    text-align: right;
+  }
+
+  .post__pagination-title {
+    font-size: 1.125rem;
+    font-weight: var(--weight-heading);
+    line-height: var(--leading-heading);
+    transition: color 0.15s ease;
+  }
+
+  .post__pagination-link:hover .post__pagination-title {
+    color: var(--color-link-hover);
+  }
+</style>

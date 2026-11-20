@@ -1,0 +1,156 @@
+
+:root {
+  --paper: #f8f2e4; /* warm cream, the reading page */
+  --paper-deep: #efe5d0;
+  --ink: #221f1b;
+  --ink-soft: #5b5248;
+  --rule: #ddd0b6;
+  --ink-blue: #173848;
+  --cream: #f3ead6; /* text on the ink-blue bands */
+  --cream-soft: #b9c7c6; /* muted text on the bands */
+  --raspberry: #a1295c; /* the portrait's magenta, deepened */
+  --bottle-teal: #1e5f63; /* the tie */
+  --teal-tint: #dee0d5;
+  --mustard: #e3b04b;
+
+  /* Process inks for the comic effects */
+  --print-cyan: #2bb3e6;
+  --print-magenta: #e6318a;
+  --print-yellow: #ffd93b;
+  --print-black: #1a1a1a;
+
+  --night: #15191c;
+  --night-raised: #1f2629;
+  --night-band: #10263a;
+  --cream-light: #ece4d4;
+  --stone: #a8a194;
+  --rule-night: #343c40;
+  --cream-soft-night: #b4c2c4;
+  --raspberry-light: #e88bb0;
+  --teal-light: #7fc1bd;
+  --teal-tint-night: #243133;
+
+  --color-band-bg: var(--ink-blue);
+  --color-band-text: var(--cream);
+  --color-band-muted: var(--cream-soft);
+  --color-band-accent: var(--mustard);
+  --color-band-accent-text: var(--ink-blue); /* text on a mustard fill */
+  --color-band-rule: color-mix(in srgb, var(--cream) 22%, transparent);
+
+  --shadow-soft: 0 1px 2px rgb(23 56 72 / 0.08), 0 6px 18px -8px rgb(23 56 72 / 0.25);
+  --radius: 3px;
+
+  --font-serif: 'Literata', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+  --weight-body: 400;
+  --weight-heading: 600;
+
+  --text-body: clamp(1.0625rem, 1.02rem + 0.2vw, 1.125rem);
+  --text-small: 0.875rem;
+  --text-meta: 0.75rem;
+  --text-label: 0.8125rem;
+  --leading-body: 1.7;
+  --leading-heading: 1.2;
+  --tracking-meta: 0.06em;
+  --tracking-caps: 0.14em;
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 6rem;
+  --gutter: 1.25rem;
+
+  --rule-width: 1px;
+
+  --width-prose: 680px;
+  --width-page: 920px;
+}
+
+:root,
+.ruled-paper {
+  --color-bg: var(--paper);
+  --color-surface: var(--paper-deep);
+  --color-text: var(--ink);
+  --color-text-muted: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-field-border: var(--ink-soft);
+  --color-accent: var(--raspberry);
+  --color-link-underline: var(--bottle-teal);
+  --color-link-hover: var(--raspberry);
+  --color-focus: var(--bottle-teal);
+  --color-tag-bg: var(--teal-tint);
+  --color-tag-text: var(--bottle-teal);
+  --color-button-bg: var(--raspberry);
+  --color-button-text: var(--cream);
+
+  --color-paper-line: color-mix(in srgb, var(--color-link-underline) 16%, transparent);
+  --color-paper-margin: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  color-scheme: light;
+}
+
+@media (min-width: 40em) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg: var(--night);
+    --color-surface: var(--night-raised);
+    --color-text: var(--cream-light);
+    --color-text-muted: var(--stone);
+    --color-rule: var(--rule-night);
+    --color-field-border: var(--stone);
+    --color-accent: var(--raspberry-light);
+    --color-link-underline: var(--teal-light);
+    --color-link-hover: var(--raspberry-light);
+    --color-focus: var(--teal-light);
+    --color-tag-bg: var(--teal-tint-night);
+    --color-tag-text: var(--teal-light);
+    --color-button-bg: var(--raspberry-light);
+    --color-button-text: var(--night);
+    --color-paper-line: color-mix(in srgb, var(--color-link-underline) 16%, transparent);
+    --color-paper-margin: color-mix(in srgb, var(--color-accent) 45%, transparent);
+
+    --color-band-bg: var(--night-band);
+    --color-band-text: var(--cream-light);
+    --color-band-muted: var(--cream-soft-night);
+    --color-band-accent-text: var(--night-band);
+
+    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -10px rgb(0 0 0 / 0.6);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-bg: var(--night);
+  --color-surface: var(--night-raised);
+  --color-text: var(--cream-light);
+  --color-text-muted: var(--stone);
+  --color-rule: var(--rule-night);
+  --color-field-border: var(--stone);
+  --color-accent: var(--raspberry-light);
+  --color-link-underline: var(--teal-light);
+  --color-link-hover: var(--raspberry-light);
+  --color-focus: var(--teal-light);
+  --color-tag-bg: var(--teal-tint-night);
+  --color-tag-text: var(--teal-light);
+  --color-button-bg: var(--raspberry-light);
+  --color-button-text: var(--night);
+  --color-paper-line: color-mix(in srgb, var(--color-link-underline) 16%, transparent);
+  --color-paper-margin: color-mix(in srgb, var(--color-accent) 45%, transparent);
+
+  --color-band-bg: var(--night-band);
+  --color-band-text: var(--cream-light);
+  --color-band-muted: var(--cream-soft-night);
+  --color-band-accent-text: var(--night-band);
+
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -10px rgb(0 0 0 / 0.6);
+  color-scheme: dark;
+}

@@ -1,0 +1,87 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import '@fontsource/literata/400.css';
+import '@fontsource/literata/400-italic.css';
+import '@fontsource/literata/600.css';
+import '@fontsource/literata/600-italic.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '../styles/global.css';
+
+import { withBase } from '../lib/url';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ClickPow from '../components/ClickPow.astro';
+import portrait from '../assets/portrait.webp';
+
+interface Props {
+  title?: string;
+  description: string;
+  image?: ImageMetadata;
+  type?: 'website' | 'article';
+}
+
+const SITE_NAME = 'Andrew Williamson';
+
+const { title, description, image = portrait, type = 'website' } = Astro.props;
+
+const fullTitle = title ? `${title} – ${SITE_NAME}` : `${SITE_NAME} – Writer, copyeditor and proofreader`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+const socialImage = await getImage({ src: image, width: 1200, format: 'jpg' });
+const socialImageUrl = new URL(socialImage.src, Astro.site);
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="icon" type="image/png" href={withBase('/favicon.png')} />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href={withBase('/rss.xml')} />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
+    <script is:inline>
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem('theme');
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+    <ClickPow />
+  </body>
+</html>

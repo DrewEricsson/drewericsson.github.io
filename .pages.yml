@@ -1,0 +1,62 @@
+
+media:
+  input: src/assets/posts
+  output: ../../assets/posts
+
+content:
+  - name: posts
+    label: Posts
+    type: collection
+    path: src/content/posts
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+
+    view:
+      fields: [title, date, draft]
+      sort: date
+      direction: desc
+
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+
+      - name: date
+        label: Date
+        type: date
+        required: true
+
+      - name: summary
+        label: Summary
+        type: string
+        required: true
+        description: "One line, shown on cards and link previews"
+
+      - name: cover
+        label: Cover image
+        type: image
+        required: false
+
+      - name: coverAlt
+        label: Cover image description
+        type: string
+        required: false
+        description: "Describe the image for people who can't see it. Needed if you add a cover."
+
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+        required: false
+
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+        description: "Drafts are saved but not shown on the site"
+
+      - name: body
+        label: Body
+        type: rich-text
+        required: false

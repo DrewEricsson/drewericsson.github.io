@@ -1,0 +1,119 @@
+---
+import CrosswordClue from './CrosswordClue.astro';
+import { withBase } from '../lib/url';
+
+const year = new Date().getFullYear();
+
+const siteLinks = [
+  { label: 'Blog', href: '/blog/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Services', href: '/services/' },
+  { label: 'Contact', href: '/contact/' },
+];
+
+const elsewhereLinks = [
+  { label: 'RSS feed', href: '/rss.xml' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/andrew-williamson-writer/' },
+];
+---
+
+<footer class="site-footer band">
+  <div class="container site-footer__inner">
+    <div class="site-footer__about">
+      <p class="site-footer__place">Written and edited in Staffordshire, usually over a cup of tea.</p>
+
+      <div class="site-footer__columns">
+        <nav aria-labelledby="footer-site-heading">
+          <h2 id="footer-site-heading" class="site-footer__heading">Site</h2>
+          <ul class="site-footer__links">
+            {siteLinks.map((link) => <li><a href={withBase(link.href)}>{link.label}</a></li>)}
+          </ul>
+        </nav>
+        <div>
+          <h2 class="site-footer__heading">Elsewhere</h2>
+          <ul class="site-footer__links">
+            {
+              elsewhereLinks.map((link) => (
+                <li>
+                  <a
+                    href={link.href.startsWith('http') ? link.href : withBase(link.href)}
+                    rel={link.href.startsWith('http') ? 'me' : undefined}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <CrosswordClue />
+
+    <p class="site-footer__copyright">© {year} Andrew Williamson</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-xl) var(--space-l);
+    font-size: var(--text-small);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 52em) {
+    .site-footer__inner {
+      grid-template-columns: 1fr minmax(0, 24rem);
+      align-items: start;
+      column-gap: var(--space-2xl);
+    }
+  }
+
+  .site-footer__place {
+    font-style: italic;
+    color: var(--color-band-muted);
+  }
+
+  .site-footer__columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m) var(--space-2xl);
+    margin-top: var(--space-l);
+  }
+
+  .site-footer__heading {
+    margin-bottom: var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-body);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--color-band-accent);
+  }
+
+  .site-footer__links {
+    display: grid;
+    gap: var(--space-3xs);
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__links a {
+    text-decoration-color: transparent;
+  }
+
+  .site-footer__copyright {
+    grid-column: 1 / -1;
+    padding-top: var(--space-m);
+    border-top: var(--rule-width) solid var(--color-band-rule);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-meta);
+    color: var(--color-band-muted);
+  }
+</style>
